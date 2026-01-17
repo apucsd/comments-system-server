@@ -34,7 +34,7 @@ A robust, standalone comment system backend built with Node.js, Express, and Mon
 
       ```bash
       git clone <repo-url>
-      cd mehor-backend
+      cd folder-name
       ```
 
 2. Install dependencies:
