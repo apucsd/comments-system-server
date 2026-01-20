@@ -48,17 +48,6 @@ const userSchema = new Schema<IUser, UserModal>(
       { timestamps: true }
 );
 
-//exist user check
-userSchema.statics.isExistUserById = async (id: string) => {
-      const isExist = await User.findById(id);
-      return isExist;
-};
-
-userSchema.statics.isExistUserByEmail = async (email: string) => {
-      const isExist = await User.findOne({ email });
-      return isExist;
-};
-
 //is match password
 userSchema.statics.isMatchPassword = async (password: string, hashPassword: string): Promise<boolean> => {
       return await bcrypt.compare(password, hashPassword);
@@ -66,17 +55,6 @@ userSchema.statics.isMatchPassword = async (password: string, hashPassword: stri
 
 //check user
 userSchema.pre('save', async function (next) {
-      //check user
-      const isExistUser = await User.find({ userName: this.userName });
-      if (isExistUser.length > 0) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, 'Username already exist!');
-      }
-      const isExist = await User.findOne({ email: this.email });
-      if (isExist) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already exist!');
-      }
-
-      //password hash
       this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt_rounds));
       next();
 });
